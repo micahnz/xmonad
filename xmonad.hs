@@ -118,7 +118,7 @@ myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     -- launch a terminal
-    [ ((modMasl, xK_t), spawn $ XMonad.terminal conf)
+    [ ((modMask, xK_t), spawn $ XMonad.terminal conf)
  
     -- launch gmrun
     , ((modMask, xK_p), spawn "dmenu_run")
@@ -172,7 +172,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask, xK_i), sendMessage ExpandSlave)
  
     -- Push window back into tiling
-    , ((modMask, xK_t), withFocused $ windows . W.sink)
+    , ((modMask, xK_s), withFocused $ windows . W.sink)
  
     -- Increment the number of windows in the master area
     , ((modMask, xK_comma), sendMessage (IncMasterN 1))
