@@ -10,24 +10,29 @@
 --              * some convenient doFloat and moveTo{Mail, Web, IM} shortcuts.
 --
 import           XMonad                          hiding ((|||))
+import 			 XMonad.Actions.GridSelect
+import 			 XMonad.Actions.Navigation2D
+import 			 XMonad.Actions.Promote
+import 			 XMonad.Actions.Submap as SM
+import 			 XMonad.Actions.Search as S
+import 			 XMonad.Actions.SinkAll
+import 			 XMonad.Actions.WindowBringer
 import           XMonad.Hooks.DynamicLog
 import           XMonad.Hooks.FadeInactive       as FI
 import           XMonad.Hooks.ManageDocks
 import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.UrgencyHook
-import 		 XMonad.Layout.IndependentScreens
+import 		 	 XMonad.Layout.IndependentScreens
 import           XMonad.Layout.DecorationMadness
-import           XMonad.Layout.IM
 import           XMonad.Layout.LayoutCombinators (JumpToLayout (..), (|||))
 import           XMonad.Layout.Named
 import           XMonad.Layout.NoBorders
 import           XMonad.Layout.PerWorkspace
-import           XMonad.Layout.Reflect
-import		 XMonad.Layout.Grid
-import 		 XMonad.Layout.Drawer
+import		     XMonad.Layout.Grid
+import 		     XMonad.Layout.Drawer
 import           XMonad.Layout.ResizableTile
 import           XMonad.Layout.MouseResizableTile
-import           XMonad.Prompt
+import           XMonad.Prompt as P
 import           XMonad.Prompt.Input
 import qualified XMonad.StackSet                 as W
 import           XMonad.Util.Run                 (spawnPipe)
@@ -88,7 +93,7 @@ numPadKeys = [ xK_KP_End,  xK_KP_Down,  xK_KP_Page_Down -- 1, 2, 3
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
 myWorkspaces :: [String]
-myWorkspaces = withScreens 2 [ "1", "2", "3", "4" ]
+myWorkspaces = withScreens 2 [ "A", "B", "C", "D", "E", "F", "G", "H", "J", "K" ]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -110,7 +115,20 @@ myFocusedBorderColor = "red"
 --
 myDefaultGaps :: [(Integer, Integer, Integer, Integer)]
 myDefaultGaps = [(0,0,0,0)]
- 
+
+
+-- Search engine bindings
+searchEngineMap method = M.fromList $
+	[ ((0, xK_g), method S.google)
+	, ((0, xK_i), method S.images)
+	, ((0, xK_s), method S.scholar)
+	, ((0, xK_d), method S.dictionary)
+	, ((0, xK_t), method S.thesaurus)
+	, ((0, xK_m), method S.maps)
+	, ((0, xK_w), method S.wikipedia)
+	, ((0, xK_y), method S.youtube)
+	]
+
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
@@ -121,59 +139,110 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [ ((modMask, xK_t), spawn $ XMonad.terminal conf)
  
     -- launch gmrun
-    , ((modMask, xK_p), spawn "dmenu_run")
+    , ((modMask, xK_r), spawn "dmenu_run")
  
     -- close focused window
     , ((modMask, xK_c), kill)
- 
-     -- Rotate through the available layout algorithms
+
+    -- Rotate through the available layout algorithms
     , ((modMask, xK_space), sendMessage NextLayout)
  
     --  Reset the layouts on the current workspace to default
     , ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf)
- 
-    -- Resize viewed windows to the correct size
-    , ((modMask, xK_n), refresh)
- 
+	
+	--
+	, ((modMask .|. shiftMask, xK_g), goToSelected defaultGSConfig)
+	
+	--
+	, ((modMask, xK_g), gotoMenu)
+
+	-- 
+	, ((modMask, xK_b), bringMenu)
+
     -- Move focus to the next window
     , ((modMask, xK_Tab), windows W.focusDown)
- 
-    -- Move focus to the next window
-    , ((modMask, xK_j), windows W.focusDown)
- 
-    -- Move focus to the previous window
+    
+	-- Move focus to the previous window
     , ((modMask .|. shiftMask, xK_Tab), windows W.focusUp)
 
-    -- Move focus to the previous window
-    , ((modMask, xK_k), windows W.focusUp)
- 
+	-- move focus left
+	, ((modMask, xK_h), windowGo L False)
+
+	-- move focus down
+    , ((modMask, xK_j), windowGo D False) 
+
+    -- move focus up
+    , ((modMask, xK_k), windowGo U False)
+
+	-- move focus left
+	, ((modMask, xK_l), windowGo R False)
+	
+	-- move window left
+	, ((modMask .|. shiftMask, xK_h), windowSwap L False)
+
+	-- move window down
+    , ((modMask .|. shiftMask, xK_j), windowSwap D False) 
+
+    -- move window down
+    , ((modMask .|. shiftMask, xK_k), windowSwap U False)
+
+	-- move window right
+	, ((modMask .|. shiftMask, xK_l), windowSwap R False)
+
     -- Move focus to the master window
     , ((modMask, xK_m), windows W.focusMaster)
  
     -- Swap the focused window and the master window
-    , ((modMask, xK_Return), windows W.swapMaster)
- 
-    -- Swap the focused window with the next window
-    , ((modMask .|. shiftMask, xK_j), windows W.swapDown)
- 
-    -- Swap the focused window with the previous window
-    , ((modMask .|. shiftMask, xK_k), windows W.swapUp)
- 
+    , ((modMask .|. shiftMask, xK_m), windows W.swapMaster)
+ 	
+	-- promote window to master or swap master with next window
+	, ((modMask, xK_Return), promote)
+
     -- Shrink the master area
-    , ((modMask, xK_h), sendMessage Shrink)
+    , ((modMask, xK_y), sendMessage Shrink)
  
     -- Expand the master area
-    , ((modMask, xK_l), sendMessage Expand)
+    , ((modMask, xK_o), sendMessage Expand)
  
     -- Shrink the master area
-    , ((modMask, xK_u), sendMessage ShrinkSlave)
+    , ((modMask, xK_i), sendMessage ShrinkSlave)
  
     -- Expand the master area
-    , ((modMask, xK_i), sendMessage ExpandSlave)
- 
+    , ((modMask, xK_u), sendMessage ExpandSlave)
+
+	-- go left screen
+	, ((modMask, xK_Left), screenGo L False)
+
+	-- go down screen
+	, ((modMask, xK_Down), screenGo D False)
+
+	-- go up screen
+	, ((modMask, xK_Up), screenGo U False)
+
+	-- go right screen
+	, ((modMask, xK_Right), screenGo R False)
+	
+	-- move to left screen
+	, ((modMask .|. shiftMask, xK_Left), windowToScreen L False)
+
+	-- go down screen
+	, ((modMask .|. shiftMask, xK_Down), windowToScreen D False)
+
+	-- go up screen
+	, ((modMask .|. shiftMask, xK_Up), windowToScreen U False)
+
+	-- go right screen
+	, ((modMask .|. shiftMask, xK_Right), windowToScreen R False)
+
+	--
+	, ((modMask, xK_s), SM.submap $ searchEngineMap $ S.promptSearch defaultXPConfig)
+
     -- Push window back into tiling
-    , ((modMask, xK_s), withFocused $ windows . W.sink)
- 
+    , ((modMask .|. shiftMask, xK_s), withFocused $ windows . W.sink)
+
+	-- Push window back into tiling
+    , ((modMask .|. controlMask .|. shiftMask, xK_s), sinkAll)
+
     -- Increment the number of windows in the master area
     , ((modMask, xK_comma), sendMessage (IncMasterN 1))
  
@@ -193,7 +262,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- mod-shift-[1..9], Move client to workspace N
     --
     [ ((m .|. modMask, k), windows $ onCurrentScreen f i)
-         | (i, k) <- zip (workspaces' conf) [xK_1 .. xK_9]
+         | (i, k) <- zip (workspaces' conf) ([xK_1 .. xK_9] ++ [xK_0])
     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
     ]
     ++
@@ -216,10 +285,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask, xK_f), spawn "nautilus --no-desktop")
  
     --
-    , ((modMask, xK_y), focusUrgent)
+    -- , ((modMask, xK_y), focusUrgent)
  
     -- lock screen
-    , ((mod4Mask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
+    -- , ((mod4Mask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
     ]
 
 ------------------------------------------------------------------------
