@@ -268,8 +268,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     ++
  
     --
-    -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
-    -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+    -- Switch/move screen wtih keypad 
     --
     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_KP_End, xK_KP_Down] [0..]
@@ -278,6 +277,15 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     ++
  
+    --
+    -- Switch/move screen with F1-F9 
+    --
+    [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
+        | (key, sc) <- zip [xK_F1 .. xK_F9] [0..]
+    , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
+    ]
+ 
+    ++
     --
     [((modMask .|. mod1Mask, xK_space), myLayoutPrompt)
  
