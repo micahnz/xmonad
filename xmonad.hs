@@ -93,7 +93,7 @@ numPadKeys = [ xK_KP_End,  xK_KP_Down,  xK_KP_Page_Down -- 1, 2, 3
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
 myWorkspaces :: [String]
-myWorkspaces = withScreens 2 [ "A", "B", "C", "D", "E", "F", "G", "H", "J", "K" ]
+myWorkspaces = withScreens 4 [ "A", "B", "C", "D", "E", "F", "G", "H", "J", "K" ]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -271,7 +271,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- Switch/move screen wtih keypad 
     --
     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_KP_End, xK_KP_Down] [0..]
+        | (key, sc) <- zip [xK_KP_Down, xK_KP_Begin, xK_KP_Page_Down, xK_KP_End] [0..]
     , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
     ]
  
@@ -328,26 +328,25 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
  
 myLayout = smartBorders $ standardLayouts
   where
-    -- standardLayouts = tiled ||| tall ||| wide ||| full ||| circle
-    standardLayouts = tiled ||| full
-    tall = named "tall" $ avoidStruts $ ResizableTall 1 (3/100) (618/1000) []
-    wide = named "wide" $ avoidStruts $ Mirror $ ResizableTall 1 (3/100) (618/1000) []
-    circle = named "circle" $ avoidStruts $ circleSimpleDefaultResizable
-    tiled = named "tiled" $ avoidStruts $ mouseResizableTile {
-	masterFrac = (618/1000),
+    standardLayouts = wide ||| tall ||| full
+    wide = named "wide" $ avoidStruts $ mouseResizableTile {
+		masterFrac = (618/1000),
+        fracIncrement = (3/100),
+        draggerType = BordersDragger
+    }
+    tall = named "tall" $ avoidStruts $ Mirror $ mouseResizableTile {
+		masterFrac = (618/1000),
         fracIncrement = (3/100),
         draggerType = BordersDragger
     }
     full = named "full" $ avoidStruts $ Full
-    grid = named "grid" $ avoidStruts $ Grid
- 
+
 -- Set up the Layout prompt
 myLayoutPrompt :: X ()
 myLayoutPrompt = inputPromptWithCompl myXPConfig "Layout"
                  (mkComplFunFromList' allLayouts) ?+ (sendMessage . JumpToLayout)
   where
-    -- allLayouts = ["tiled", "tall", "wide", "circle", "full"]
-    allLayouts = ["tiled", "full"]
+    allLayouts = ["wide", "tall", "full"]
 
     myXPConfig :: XPConfig
     myXPConfig = defaultXPConfig {
