@@ -305,13 +305,13 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 myMouseBindings :: XConfig t -> M.Map (KeyMask, Button) (Window -> X ())
 myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
     -- mod-button1, Set the window to floating mode and move by dragging
-    [ ((modMask, button1), \w -> focus w >> mouseMoveWindow w)
+    [ ((modMask .|. shiftMask, button1), \w -> focus w >> mouseMoveWindow w)
  
     -- mod-button2, Raise the window to the top of the stack
-    , ((modMask, button2), \w -> focus w >> windows W.swapMaster)
+    , ((modMask .|. shiftMask, button2), \w -> focus w >> windows W.swapMaster)
  
     -- mod-button3, Set the window to floating mode and resize by dragging
-    , ((modMask, button3), \w -> focus w >> mouseResizeWindow w)
+    , ((modMask .|. shiftMask, button3), \w -> focus w >> mouseResizeWindow w)
     ]
  
  ------------------------------------------------------------------------
