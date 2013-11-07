@@ -93,7 +93,7 @@ numPadKeys = [ xK_KP_End,  xK_KP_Down,  xK_KP_Page_Down -- 1, 2, 3
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
 myWorkspaces :: [String]
-myWorkspaces = withScreens 4 [ "A", "B", "C", "D", "E", "F", "G", "H", "J", "K" ]
+myWorkspaces = withScreens 2 [ "A", "B", "C", "D", "E", "F", "G", "H", "J", "K" ]
  
 -- Border colors for unfocused and focused windows, respectively.
 --
