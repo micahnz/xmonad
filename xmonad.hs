@@ -199,16 +199,16 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 	, ((modMask, xK_Return), promote)
 
     -- Shrink the master area
-    , ((modMask, xK_y), sendMessage Shrink)
+    , ((modMask, xK_u), sendMessage Shrink)
  
     -- Expand the master area
-    , ((modMask, xK_o), sendMessage Expand)
+    , ((modMask, xK_p), sendMessage Expand)
  
     -- Shrink the master area
-    , ((modMask, xK_i), sendMessage ShrinkSlave)
+    , ((modMask, xK_o), sendMessage ShrinkSlave)
  
     -- Expand the master area
-    , ((modMask, xK_u), sendMessage ExpandSlave)
+    , ((modMask, xK_i), sendMessage ExpandSlave)
 
 	-- go left screen
 	, ((modMask, xK_Left), screenGo L False)
@@ -287,7 +287,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     ++
     --
-    [((modMask .|. mod1Mask, xK_space), myLayoutPrompt)
+    [((modMask .|. controlMask, xK_space), myLayoutPrompt)
  
     --
     , ((modMask, xK_f), spawn "nautilus --no-desktop")
@@ -462,12 +462,12 @@ defaults = defaultConfig {
 --
 main :: IO ()
 main = do
-    xmproc <- spawnPipe "`which xmobar` ~/.xmonad/xmobarrc"
-    xmonad $ withUrgencyHook NoUrgencyHook defaults {
-        logHook = do FI.fadeInactiveLogHook 0xbbbbbbbb
-                     dynamicLogWithPP $ xmobarPP {
-                           ppOutput = hPutStrLn xmproc
-                         , ppTitle  = xmobarColor "#ff66ff" "" . shorten 50
-                         , ppUrgent = xmobarColor "yellow" "red" . xmobarStrip
-                     }
-    }
+     xmproc <- spawnPipe "`which xmobar` ~/.xmonad/xmobarrc"
+     xmonad $ withUrgencyHook NoUrgencyHook defaults {
+         logHook = do FI.fadeInactiveLogHook 0xbbbbbbbb
+                      dynamicLogWithPP $ xmobarPP {
+                            ppOutput = hPutStrLn xmproc
+                          , ppTitle  = xmobarColor "#ff66ff" "" . shorten 50
+                          , ppUrgent = xmobarColor "yellow" "red" . xmobarStrip
+                      }
+     }

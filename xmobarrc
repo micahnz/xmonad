@@ -1,16 +1,23 @@
-Config { font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*"
-       , bgColor = "black"
-       , fgColor = "grey"
-       , position = Top
-       , lowerOnStart = True
-       , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
-                    , Run Memory ["-t","Mem: <usedratio>%"] 10
-                    , Run Com "uname" ["-s","-r"] "" 36000
-                    , Run Date "%a %b %_d %Y - %H:%M" "date" 10
-		    	    , Run StdinReader
-		    	    , Run BatteryP ["BAT0"] ["-t","<left>%","-L","25","-H","75","-h","green","-n","#ffff00","-l","red"] 100
-		]
-       , sepChar = "%"
-       , alignSep = "}{"
-       , template = "%StdinReader%}{<fc=#FFF>%date%</fc>"
-       }
+Config {
+	font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*",
+	bgColor = "black",
+	fgColor = "grey",
+	position = Top,
+	lowerOnStart = True,
+	commands = [
+		Run Cpu ["-t","<total>%"] 10,
+		Run Memory ["-t","<usedratio>%"] 100,
+		Run Date "%d %b %Y - %H:%M" "date" 10,
+		Run Wireless "wlan0" ["-t", "<quality>%"] 100,
+		Run Battery [
+			"-t", "<left>%",
+			"-h", "green",
+			"-n", "yellow",
+			"-l", "red"
+		] 10,
+		Run StdinReader
+	],
+	sepChar = "%",
+	alignSep = "}{",
+	template = "%StdinReader%}{%cpu%|%memory% - %wlan0wi% <fc=#FFF>%date%</fc> %battery%"
+}
