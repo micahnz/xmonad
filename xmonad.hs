@@ -10,6 +10,9 @@
 --              * some convenient doFloat and moveTo{Mail, Web, IM} shortcuts.
 --
 import           XMonad                          hiding ((|||))
+
+import 			 Graphics.X11.ExtraTypes.XF86
+
 import 			 XMonad.Actions.GridSelect
 import 			 XMonad.Actions.Navigation2D
 import 			 XMonad.Actions.Promote
@@ -134,7 +137,7 @@ searchEngineMap method = M.fromList $
 --
 myKeys :: XConfig Layout -> M.Map (KeyMask, KeySym) (X ())
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
- 
+
     -- launch a terminal
     [ ((modMask, xK_t), spawn $ XMonad.terminal conf)
  
@@ -143,6 +146,21 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     -- close focused window
     , ((modMask, xK_c), kill)
+
+	-- increase brightness
+	, ((0, xF86XK_MonBrightnessUp), spawn "xbacklight -inc 5")
+
+	-- decrease brightness
+	, ((0, xF86XK_MonBrightnessDown), spawn "xbacklight -dec 5")
+
+	-- mute volume
+	, ((0, xF86XK_AudioMute), spawn "amixer -D pulse set Master toggle")
+
+	-- increase volume
+	, ((0, xF86XK_AudioRaiseVolume), spawn "amixer set Master 3%+")
+
+	-- decrease volume
+	, ((0, xF86XK_AudioLowerVolume), spawn "amixer set Master 3%-")
 
     -- Rotate through the available layout algorithms
     , ((modMask, xK_space), sendMessage NextLayout)
@@ -296,7 +314,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- , ((modMask, xK_y), focusUrgent)
  
     -- lock screen
-    -- , ((mod4Mask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
+    , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
     ]
 
 ------------------------------------------------------------------------

@@ -10,11 +10,11 @@ Config {
 		Run Date "%d %b %Y - %H:%M" "date" 10,
 		Run Wireless "wlan0" ["-t", "<quality>%"] 100,
 		Run Battery [
-			"-t", "<left>%",
+			"-t", "<left>% [<timeleft>]",
 			"-h", "green",
 			"-n", "yellow",
 			"-l", "red"
-		] 10,
+		] 100,
 		Run StdinReader
 	],
 	sepChar = "%",
