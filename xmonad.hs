@@ -314,7 +314,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- , ((modMask, xK_y), focusUrgent)
  
     -- lock screen
-    , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
+    -- , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
     ]
 
 ------------------------------------------------------------------------

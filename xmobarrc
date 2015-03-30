@@ -9,6 +9,7 @@ Config {
 		Run Memory ["-t","<usedratio>%"] 100,
 		Run Date "%d %b %Y - %H:%M" "date" 10,
 		Run Wireless "wlan0" ["-t", "<quality>%"] 100,
+		Run Kbd [("us", "US"), ("th", "TH")],
 		Run Battery [
 			"-t", "<left>% [<timeleft>]",
 			"-h", "green",
@@ -19,5 +20,5 @@ Config {
 	],
 	sepChar = "%",
 	alignSep = "}{",
-	template = "%StdinReader%}{%cpu%|%memory% - %wlan0wi% <fc=#FFF>%date%</fc> %battery%"
+	template = "%StdinReader%}{%cpu%|%memory% - %wlan0wi% <fc=#FFF>%date%</fc> %kbd% %battery%"
 }
