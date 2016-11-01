@@ -272,6 +272,9 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
  
     -- Restart xmonad
     , ((modMask, xK_q), restart "xmonad" True)
+
+    -- Toggle struts
+    , ((modMask, xK_apostrophe), sendMessage ToggleStruts)
     ]
     ++
  
@@ -314,7 +317,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     -- , ((modMask, xK_y), focusUrgent)
  
     -- lock screen
-    -- , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
+    , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
     ]
 
 ------------------------------------------------------------------------
