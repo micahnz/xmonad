@@ -102,7 +102,7 @@ myWorkspaces = withScreens 2 [ "A", "B", "C", "D", "E", "F", "G", "H", "J", "K" 
 --
 myNormalBorderColor, myFocusedBorderColor :: String
 myNormalBorderColor  = "black"
-myFocusedBorderColor = "red"
+myFocusedBorderColor = "#455A64"
  
 -- Default offset of drawable screen boundaries from each physical
 -- screen. Anything non-zero here will leave a gap of that many pixels
@@ -275,6 +275,18 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
 
     -- Toggle struts
     , ((modMask, xK_apostrophe), sendMessage ToggleStruts)
+    
+	-- lock screen
+    , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
+
+    -- file browser
+    , ((modMask, xK_f), spawn "nautilus --no-desktop")
+ 
+    --
+    , ((modMask, xK_y), focusUrgent)
+	
+	--
+	, ((modMask .|. controlMask, xK_space), myLayoutPrompt)
     ]
     ++
  
@@ -304,20 +316,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     [((m .|. modMask, key), screenWorkspace sc >>= flip whenJust (windows . f))
         | (key, sc) <- zip [xK_F1 .. xK_F9] [0..]
     , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]
-    ]
- 
-    ++
-    --
-    [((modMask .|. controlMask, xK_space), myLayoutPrompt)
- 
-    --
-    , ((modMask, xK_f), spawn "nautilus --no-desktop")
- 
-    --
-    -- , ((modMask, xK_y), focusUrgent)
- 
-    -- lock screen
-    , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
     ]
 
 ------------------------------------------------------------------------
@@ -350,17 +348,17 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList
 myLayout = smartBorders $ standardLayouts
   where
     standardLayouts = wide ||| tall ||| full
-    wide = named "wide" $ avoidStruts $ mouseResizableTile {
+    wide = named "wide" $ avoidStruts $ smartBorders $ mouseResizableTile {
 		masterFrac = (618/1000),
         fracIncrement = (3/100),
         draggerType = BordersDragger
     }
-    tall = named "tall" $ avoidStruts $ Mirror $ mouseResizableTile {
+    tall = named "tall" $ avoidStruts $ smartBorders $ Mirror $ mouseResizableTile {
 		masterFrac = (618/1000),
         fracIncrement = (3/100),
         draggerType = BordersDragger
     }
-    full = named "full" $ avoidStruts $ Full
+    full = named "full" $ avoidStruts $ noBorders $ Full
 
 -- Set up the Layout prompt
 myLayoutPrompt :: X ()
@@ -488,7 +486,7 @@ main = do
          logHook = do FI.fadeInactiveLogHook 0xbbbbbbbb
                       dynamicLogWithPP $ xmobarPP {
                             ppOutput = hPutStrLn xmproc
-                          , ppTitle  = xmobarColor "#ff66ff" "" . shorten 50
-                          , ppUrgent = xmobarColor "yellow" "red" . xmobarStrip
+                          , ppTitle  = xmobarColor "#448AFF" "" . shorten 50
+                          , ppUrgent = xmobarColor "#FFCCBC" "#FF5722" . xmobarStrip
                       }
      }

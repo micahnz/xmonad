@@ -5,10 +5,13 @@ Config {
 	position = Top,
 	lowerOnStart = True,
 	commands = [
-		Run Cpu ["-t","<total>%"] 10,
+		Run MultiCpu ["-t","<total>%"] 10,
 		Run Memory ["-t","<usedratio>%"] 100,
 		Run Date "%d %b %Y - %H:%M" "date" 10,
-		Run Wireless "wlan0" ["-t", "<quality>%"] 100,
+		Run Wireless "wlp3s0" ["-t", "<quality>%"] 100,
+		Run Volume "default" "Master" [
+			"-t", "<volumevbar> <status>"
+		] 1,
 		Run Kbd [("us", "US"), ("th", "TH")],
 		Run Battery [
 			"-t", "<left>% [<timeleft>]",
@@ -20,5 +23,5 @@ Config {
 	],
 	sepChar = "%",
 	alignSep = "}{",
-	template = "%StdinReader%}{%cpu%|%memory% - %wlan0wi% <fc=#FFF>%date%</fc> %kbd% %battery%"
+	template = "%StdinReader%}{%multicpu%|%memory% - %wlp3s0wi% - <fc=#FFF>%date%</fc> %kbd% %default:Master%"
 }
