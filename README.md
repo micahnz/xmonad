@@ -10,3 +10,4 @@ xrandr --output HDMI1 --off --output LVDS1 --mode 1600x900 --pos 160x1080 --rota
 
 add to .profile
 setxkbmap -layout us,th -option 'grp:shift_caps_toggle'
+setxkbmap -layout us,bg -variant ,phonetic -option 'grp:shift_caps_toggle'
