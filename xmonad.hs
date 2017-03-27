@@ -277,7 +277,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
     , ((modMask, xK_apostrophe), sendMessage ToggleStruts)
     
 	-- lock screen
-    , ((modMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
+    , ((modMask .|. controlMask .|. shiftMask, xK_l), spawn "gnome-screensaver-command --lock")
 
     -- file browser
     , ((modMask, xK_f), spawn "nautilus --no-desktop")

@@ -3,6 +3,7 @@ Config {
 	bgColor = "black",
 	fgColor = "grey",
 	position = Top,
+	allDesktops = True,
 	lowerOnStart = True,
 	commands = [
 		Run MultiCpu ["-t","<total>%"] 10,
@@ -12,7 +13,7 @@ Config {
 		Run Volume "default" "Master" [
 			"-t", "<volumevbar> <status>"
 		] 1,
-		Run Kbd [("us", "US"), ("th", "TH")],
+		Run Kbd [("us", "US"), ("bg(phonetic)", "BG")],
 		Run Battery [
 			"-t", "<left>% [<timeleft>]",
 			"-h", "green",
@@ -23,5 +24,5 @@ Config {
 	],
 	sepChar = "%",
 	alignSep = "}{",
-	template = "%StdinReader%}{%multicpu%|%memory% - %wlp3s0wi% - <fc=#FFF>%date%</fc> %kbd% %default:Master%"
+	template = "%StdinReader%}{%multicpu%|%memory% - %wlp3s0wi% - <fc=#FFF>%date%</fc> %kbd% %default:Master% %battery%"
 }
