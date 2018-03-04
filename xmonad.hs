@@ -468,8 +468,9 @@ defaults = defaultConfig {
     , mouseBindings      = myMouseBindings
  
    -- hooks, layouts
-    , layoutHook         = myLayout
     , manageHook         = myManageHook
+    , handleEventHook    = docksEventHook
+    , layoutHook         = myLayout
     , logHook            = myLogHook
     , startupHook        = myStartupHook
 }
