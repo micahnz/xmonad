@@ -1,5 +1,5 @@
 Config {
-	font = "-misc-fixed-*-*-*-*-10-*-*-*-*-*-*-*",
+	font = "xft:DejaVu Sans Mono Book:size=8:antialias=true",
 	bgColor = "black",
 	fgColor = "grey",
 	position = Top,
@@ -24,5 +24,5 @@ Config {
 	],
 	sepChar = "%",
 	alignSep = "}{",
-	template = "%StdinReader%}{%multicpu%|%memory% - %wlp3s0wi% - <fc=#FFF>%date%</fc> %kbd% %default:Master% %battery%"
+	template = "%StdinReader%}{%multicpu%|%memory% - <fc=#FFF>%date%</fc> %kbd% "
 }
