@@ -1,0 +1,2 @@
+#!/bin/bash
+feh --bg-center ~/.xmonad/xmonad.git/images/background.jpg
